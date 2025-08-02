@@ -5,9 +5,7 @@ export const submitClaim = createAsyncThunk(
   "claim/submit",
   async (formData, { rejectWithValue }) => {
     try {
-      const res = await api.post("/claims", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      const res = await api.createClaim(formData);
       return res.data;
     } catch (err) {
       return rejectWithValue(err.response.data);

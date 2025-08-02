@@ -2,16 +2,22 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { fetchMe } from "./App/features/auth/authSlice";
-import Login from "./App/Pages/auth/Login";
+import ProtectedRoute from "./App/Routes/ProtectedRoute";
+
+// Layouts
 import DashboardLayout from "./App/Pages/Dashboard/DashboardLayout";
+
+// Pages
+import Login from "./App/Pages/auth/Login";
+import Unauthorized from "./App/Pages/Unauthorized";
 import AdminDashboard from "./App/Pages/Dashboard/AdminDashboard";
 import AccountDashboard from "./App/Pages/Dashboard/AccountDashboard";
-import ClaimForm from "./App/Pages/Claims/ClaimForm";
-import ClaimList from "./App/Pages/Claims/ClaimList";
-import ClaimReviewPanel from "./App/Pages/Claims/ClaimReviewPanel";
-import Unauthorized from "./App/Pages/Unauthorized";
-import ProtectedRoute from "./App/Routes/ProtectedRoute";
 import UserDashboard from "./App/Pages/Dashboard/UserDashboard";
+import ClaimForm from "./App/Pages/Claims/ClaimForm";
+import ClaimReviewPanel from "./App/Pages/Claims/ClaimReviewPanel";
+import Post from "./App/Pages/Posts/Post";
+import PostList from "./App/Pages/Posts/PostList";
+import ClaimList from "./App/Pages/Claims/ClaimList";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -21,103 +27,51 @@ const App = () => {
     dispatch(fetchMe());
   }, [dispatch]);
 
-  // ✅ Wait for auth state before rendering anything
   if (loading) {
     return (
       <div className="h-screen flex items-center justify-center text-lg">
-        Checking auth...
+        Loading...
       </div>
     );
   }
 
   return (
     <Routes>
-      {/* ✅ Login route — redirect to dashboard if already logged in */}
-      <Route
-        path="/login"
-        element={!user ? <Login /> : <Navigate to="/dashboard" replace />}
-      />
-
-      {/* ✅ Unauthorized */}
+      {/* Public Routes */}
+      <Route path="/login" element={!user ? <Login /> : <Navigate to="/dashboard" replace />} />
       <Route path="/unauthorized" element={<Unauthorized />} />
 
-      {/* ✅ Dashboard Layout for both admin and account users */}
-      <Route
-        path="/dashboard"
-        element={user ? <DashboardLayout /> : <Navigate to="/login" replace />}
-      >
-        {/* Admin routes */}
-        <Route
-          path="admin"
-          element={
-            <ProtectedRoute allowedRoles={["Admin"]}>
-              <AdminDashboard />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="review-claims"
-          element={
-            <ProtectedRoute allowedRoles={["Admin"]}>
-              <ClaimReviewPanel />
-            </ProtectedRoute>
-          }
-        />
+      {/* Protected Dashboard Routes */}
+      <Route path="/dashboard" element={user ? <DashboardLayout /> : <Navigate to="/login" replace />}>
+        
+        {/* Admin Routes */}
+        <Route element={<ProtectedRoute allowedRoles={["Admin"]} />}>
+          <Route path="admin" element={<AdminDashboard />} />
+          <Route path="review-claims" element={<ClaimReviewPanel />} />
+        </Route>
 
-        {/* Account routes */}
-        <Route
-          path="Account"
-          element={
-            <ProtectedRoute allowedRoles={["Account", "Admin"]}>
-              <AccountDashboard />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="submit-claim"
-          element={
-            <ProtectedRoute allowedRoles={["Account", "Admin"]}>
-              <ClaimForm />
-            </ProtectedRoute>
-          }
-        />
-        {/* <Route
-          path="my-claim"
-          element={
-            <ProtectedRoute allowedRoles={["Account", "Admin"]}>
-              <ClaimList />
-            </ProtectedRoute>
-          }
-        /> */}
-        <Route
-          path="Account"
-          element={
-            <ProtectedRoute allowedRoles={["Account"]}>
-              <AccountDashboard />
-            </ProtectedRoute>
-          }
-        />
+        {/* Account Routes */}
+        <Route element={<ProtectedRoute allowedRoles={["Account", "Admin"]} />}>
+          <Route path="account" element={<AccountDashboard />} />
+          <Route path="submit-claim" element={<ClaimForm />} />
+        </Route>
 
-        <Route
-          path="my-claims"
-          element={
-            <ProtectedRoute allowedRoles={["User"]}>
-              <UserDashboard />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="submit-claims"
-          element={
-            <ProtectedRoute allowedRoles={["User", "Account"]}>
-              <ClaimForm />
-            </ProtectedRoute>
-          }
-        />
+        {/* User Routes */}
+        <Route element={<ProtectedRoute allowedRoles={["User"]} />}>
+          <Route path="my-claims" element={<UserDashboard />} />
+          <Route path="claim-list" element={<ClaimList />} />
+          <Route path="post-list" element={<PostList />} />
+          <Route path="post" element={<Post />} />
+        </Route>
+
+        {/* Shared Routes */}
+        <Route element={<ProtectedRoute allowedRoles={["User", "Account"]} />}>
+          <Route path="submit-claims" element={<ClaimForm />} />
+        </Route>
       </Route>
 
-      {/* ✅ Catch-all fallback */}
-      <Route path="*" element={<Navigate to="/login" replace />} />
+      {/* Fallback Route */}
+      <Route path="*" element={<Navigate to={user ? "/dashboard" : "/login"} replace />} />
     </Routes>
   );
 };

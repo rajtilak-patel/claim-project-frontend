@@ -50,7 +50,16 @@ export default {
   getUserInfo: () => api.get("/auth/user-info"),
 
   // claim status show
+  createClaim: (data) => api.post("/claims", data, {
+    headers: { "Content-Type": "multipart/form-data" },
+  }),
   getClaimStatus: (query) => api.get(`/claims/review?${query}`),
+  getClaimByUser: () => api.get(`/claims/review/user`),
   updateClaimStatus: (claimId, status) =>
     api.patch(`/claims/${claimId}`, { status }),
+
+  // create post
+  createPost: (data) => api.post("/posts", data),
+  getPosts: () => api.get("/posts"),
+  getAllPost: () => api.get('/posts/list'),
 };

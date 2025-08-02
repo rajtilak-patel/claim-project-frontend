@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { submitClaim, resetClaimState } from "../../features/claim/claimSlice";
 import { useEffect } from "react";
+import api from "../../utils/api";
 
 const ClaimForm = () => {
   const dispatch = useDispatch();
@@ -19,9 +20,9 @@ const ClaimForm = () => {
   // Fetch posts
   useEffect(() => {
     const fetchPosts = async () => {
-      const res = await fetch("http://localhost:5000/api/v1/posts");
-      const data = await res.json();
-      setPosts(data.posts);
+      const res = await api.getPosts();
+      setPosts(res.data.posts);
+      setLoading(false);
     };
     fetchPosts();
   }, []);
@@ -43,11 +44,16 @@ const ClaimForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const data = new FormData();
-    data.append("reason", formData.reason);
     data.append("postId", formData.postId);
-    data.append("proofImage", formData.image);
-
+    data.append("mediaProof", formData.image);
+    data.append("views", 0);
+    data.append("likes", 0);
+   
+    console.log("Submitting claim with data:", data);
+    setLoading(true);
     dispatch(submitClaim(data));
+    setLoading(false);
+    setFormData({ postId: "", image: null }); // Reset form after submission
   };
 
   return (
@@ -69,14 +75,26 @@ const ClaimForm = () => {
           ))}
         </select>
 
-        <label className="block mb-2">Reason</label>
-        <textarea
-          name="reason"
-          rows="3"
+        {/* Likes for Claim */}
+        <label className="block mb-2">Likes for Claim</label>
+        <input
+          type="number"
+          name="likes"
+          min="0"
           className="w-full p-2 border rounded mb-4"
           onChange={handleChange}
           required
-        ></textarea>
+        />
+        {/* Views for Claim */}
+        <label className="block mb-2">Views for Claim</label>
+        <input
+          type="number"
+          name="views"
+          min="0"
+          className="w-full p-2 border rounded mb-4"
+          onChange={handleChange}
+          required
+        />
 
         <label className="block mb-2">Proof Image</label>
         <input
