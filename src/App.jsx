@@ -11,6 +11,7 @@ import ClaimList from "./App/Pages/Claims/ClaimList";
 import ClaimReviewPanel from "./App/Pages/Claims/ClaimReviewPanel";
 import Unauthorized from "./App/Pages/Unauthorized";
 import ProtectedRoute from "./App/Routes/ProtectedRoute";
+import UserDashboard from "./App/Pages/Dashboard/UserDashboard";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -67,7 +68,7 @@ const App = () => {
         <Route
           path="Account"
           element={
-            <ProtectedRoute allowedRoles={["Account","Admin"]}>
+            <ProtectedRoute allowedRoles={["Account", "Admin"]}>
               <AccountDashboard />
             </ProtectedRoute>
           }
@@ -80,11 +81,36 @@ const App = () => {
             </ProtectedRoute>
           }
         />
-        <Route
-          path="my-claims"
+        {/* <Route
+          path="my-claim"
           element={
             <ProtectedRoute allowedRoles={["Account", "Admin"]}>
               <ClaimList />
+            </ProtectedRoute>
+          }
+        /> */}
+        <Route
+          path="Account"
+          element={
+            <ProtectedRoute allowedRoles={["Account"]}>
+              <AccountDashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="my-claims"
+          element={
+            <ProtectedRoute allowedRoles={["User"]}>
+              <UserDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="submit-claims"
+          element={
+            <ProtectedRoute allowedRoles={["User", "Account"]}>
+              <ClaimForm />
             </ProtectedRoute>
           }
         />

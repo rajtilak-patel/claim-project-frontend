@@ -50,7 +50,7 @@ export default {
   getUserInfo: () => api.get("/auth/user-info"),
 
   // claim status show
-  getClaimStatus: () => api.get("/claims/review"),
+  getClaimStatus: (query) => api.get(`/claims/review?${query}`),
   updateClaimStatus: (claimId, status) =>
-    api.patch(`/claims/claim-status/${claimId}`, { status }),
+    api.patch(`/claims/${claimId}`, { status }),
 };

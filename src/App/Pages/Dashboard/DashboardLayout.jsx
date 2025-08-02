@@ -14,6 +14,7 @@ const DashboardLayout = () => {
   const logout = () => {
     localStorage.removeItem("token");
     navigate("/login");
+    window.location.reload();
   };
 
   return (
@@ -31,6 +32,16 @@ const DashboardLayout = () => {
             {user.role === "Account" && (
               <li>
                 <Link to="/dashboard/account">My Claims</Link>
+              </li>
+            )}
+            {user.role === "User" && (
+              <li>
+                <Link to="/dashboard/my-claims">My Claims</Link>
+              </li>
+            )}
+            {user.role === "User" && (
+              <li>
+                <Link to="/dashboard/submit-claims">Submit Claim</Link>
               </li>
             )}
             <li>

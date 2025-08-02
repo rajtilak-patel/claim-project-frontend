@@ -5,7 +5,8 @@ import { useEffect } from "react";
 
 const ClaimForm = () => {
   const dispatch = useDispatch();
-  const { loading, success, error } = useSelector((state) => state.claim);
+  const [loading,setLoading] = useState(false); 
+  // const { loading, success, error } = useSelector((state) => state.claim);
 
   const [formData, setFormData] = useState({
     reason: "",
@@ -25,11 +26,11 @@ const ClaimForm = () => {
     fetchPosts();
   }, []);
 
-  useEffect(() => {
-    if (success || error) {
-      setTimeout(() => dispatch(resetClaimState()), 3000);
-    }
-  }, [success, error, dispatch]);
+  // useEffect(() => {
+  //   // if (success || error) {
+  //   //   setTimeout(() => dispatch(resetClaimState()), 3000);
+  //   // }
+  // }, [success, error, dispatch]);
 
   const handleChange = (e) => {
     if (e.target.name === "image") {
@@ -95,8 +96,8 @@ const ClaimForm = () => {
           {loading ? "Submitting..." : "Submit Claim"}
         </button>
 
-        {success && <p className="text-green-500 mt-3">Claim submitted!</p>}
-        {error && <p className="text-red-500 mt-3">{error}</p>}
+        {/* {success && <p className="text-green-500 mt-3">Claim submitted!</p>} */}
+        {/* {error && <p className="text-red-500 mt-3">{error}</p>} */}
       </form>
     </div>
   );
