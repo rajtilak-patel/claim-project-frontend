@@ -13,6 +13,7 @@ import {
   FaHistory
 } from "react-icons/fa";
 import { FiChevronDown, FiChevronUp } from "react-icons/fi";
+import { useSelector } from "react-redux";
 
 const baseURL = import.meta.env.VITE_API_URL;
 
@@ -23,10 +24,16 @@ const ClaimList = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [showFilters, setShowFilters] = useState(false);
-
+  const {user} = useSelector((state) => state.auth);
   const fetchClaims = async () => {
     setLoading(true);
     try {
+      if (user.role === "Account") {
+        const res = await api.getClaimStatus();
+        setClaims(res.data.claims);
+        setError(null);
+        return;
+      }
       const res = await api.getClaimByUser(`status=${statusFilter}`);
       setClaims(res.data.claims);
       setError(null);
@@ -78,7 +85,7 @@ const ClaimList = () => {
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8 gap-4">
-        <h2 className="text-2xl font-bold text-gray-800">My Submitted Claims</h2>
+        <h2 className="text-2xl font-bold text-gray-800">Submitted Claims</h2>
         
         <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
           <div className="relative flex-grow">
@@ -145,7 +152,7 @@ const ClaimList = () => {
         </div>
       ) : filteredClaims.length === 0 ? (
         <div className="text-center py-12 bg-gray-50 rounded-lg">
-          <FaFileAlt className="mx-auto text-gray-400 text-4xl mb-3" />
+          {/* <FaFileAlt className="mx-auto text-gray-400 text-4xl mb-3" /> */}
           <h3 className="text-lg font-medium text-gray-900">No claims found</h3>
           <p className="text-gray-500 mt-1">
             {searchTerm ? "Try a different search term" : "You haven't submitted any claims yet"}

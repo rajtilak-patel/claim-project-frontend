@@ -27,6 +27,19 @@ export const fetchMe = createAsyncThunk("auth/fetchMe", async (_, thunkAPI) => {
   }
 });
 
+export const registerUser = createAsyncThunk(
+  "auth/registerUser",
+  async (data, thunkAPI) => {
+    try {
+      const res = await api.register(data);
+      localStorage.setItem("token", res.data.token);
+      return res.data;
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err.response.data);
+    }
+  }
+);
+
 const authSlice = createSlice({
   name: "auth",
   initialState: {

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { registerUser } from '../../../App/features/auth/authSlice';
+// import { registerUser } from '../../../App/features/auth/authSlice';
 import { useNavigate, Link } from 'react-router-dom';
 import { Eye, EyeOff } from 'lucide-react'; // Optional, for password toggle
 

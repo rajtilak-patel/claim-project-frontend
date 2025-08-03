@@ -18,6 +18,8 @@ import ClaimReviewPanel from "./App/Pages/Claims/ClaimReviewPanel";
 import Post from "./App/Pages/Posts/Post";
 import PostList from "./App/Pages/Posts/PostList";
 import ClaimList from "./App/Pages/Claims/ClaimList";
+import DashboardLanding from "./App/Pages/Dashboard/DashboardLanding";
+// import Register from "./App/Pages/auth/Register";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -39,21 +41,25 @@ const App = () => {
     <Routes>
       {/* Public Routes */}
       <Route path="/login" element={!user ? <Login /> : <Navigate to="/dashboard" replace />} />
+      {/* <Route path="/register" element={<Register />} /> */}
       <Route path="/unauthorized" element={<Unauthorized />} />
-
+      <Route path="/" element={<DashboardLanding />} />
       {/* Protected Dashboard Routes */}
       <Route path="/dashboard" element={user ? <DashboardLayout /> : <Navigate to="/login" replace />}>
         
         {/* Admin Routes */}
         <Route element={<ProtectedRoute allowedRoles={["Admin"]} />}>
+          {/* <Route index element={<DashboardLanding />} /> */}
           <Route path="admin" element={<AdminDashboard />} />
           <Route path="review-claims" element={<ClaimReviewPanel />} />
         </Route>
 
         {/* Account Routes */}
-        <Route element={<ProtectedRoute allowedRoles={["Account", "Admin"]} />}>
+        <Route element={<ProtectedRoute allowedRoles={["Account"]} />}>
           <Route path="account" element={<AccountDashboard />} />
+          <Route path="account-panel" element={<ClaimReviewPanel />} />
           <Route path="submit-claim" element={<ClaimForm />} />
+          <Route path="account-claim-list" element={<ClaimList />} />
         </Route>
 
         {/* User Routes */}

@@ -6,7 +6,7 @@ const ClaimReviewPanel = () => {
 
   const fetchClaims = async () => {
     try {
-      const res = await api.get("/claims"); // Admin-only endpoint
+      const res = await api.getClaimStatus(); // Admin-only endpoint
       setClaims(res.data.claims);
     } catch (err) {
       console.error("Failed to fetch claims:", err);
@@ -19,7 +19,7 @@ const ClaimReviewPanel = () => {
 
   const updateStatus = async (claimId, newStatus) => {
     try {
-      await api.patch(`/claims/${claimId}/status`, { status: newStatus });
+      await api.updateClaimStatus(claimId, newStatus);
       fetchClaims(); // refresh list
     } catch (err) {
       console.error("Status update failed:", err);

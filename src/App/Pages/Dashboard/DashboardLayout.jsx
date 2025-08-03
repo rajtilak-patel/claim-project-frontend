@@ -1,5 +1,6 @@
 import { Outlet, useNavigate, Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import ClaimForm from "../Claims/ClaimForm";
 
 const DashboardLayout = () => {
   const { user } = useSelector((state) => state.auth);
@@ -27,7 +28,8 @@ const DashboardLayout = () => {
         { path: "/dashboard/admin", label: "Admin Panel" },
       ],
       Account: [
-        { path: "/dashboard/account", label: "My Claims" },
+        { path: "/dashboard/account-claim-list", label: "List Claims" },
+        { path: "/dashboard/account-panel", label: "Account Panel"},
       ],
       User: [
         { path: "/dashboard/my-claims", label: "My Claims" },
@@ -73,6 +75,7 @@ const DashboardLayout = () => {
 
       {/* Main Content */}
       <main className="flex-1 p-6 bg-gray-100 overflow-auto">
+        {/* Render nested routes */}
         <Outlet />
       </main>
     </div>

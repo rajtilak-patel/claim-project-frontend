@@ -59,7 +59,9 @@ export default {
     api.patch(`/claims/${claimId}`, { status }),
 
   // create post
-  createPost: (data) => api.post("/posts", data),
+  createPost: (data) => api.post("/posts", data, {
+    headers: { "Content-Type": "multipart/form-data" },
+  }),
   getPosts: () => api.get("/posts"),
   getAllPost: () => api.get('/posts/list'),
 };
